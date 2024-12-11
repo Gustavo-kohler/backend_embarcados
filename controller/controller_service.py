@@ -1,6 +1,9 @@
 import fastapi
 from .models import planta_model, config_model, base_model
 import sqlalchemy as sa
+import requests
+
+URLEmbarcado = ""
 
 app = fastapi.FastAPI()
 
@@ -13,7 +16,7 @@ config = config_model.Config(metadata)
 
 metadata.create_all(engine)
 
-config.insert(conn, None, None, False)
+config.insert(conn, None)
 
 
 @app.get('/planta')
@@ -45,6 +48,6 @@ def get_config():
 
 @app.put('/config')
 def put_config(config_data: base_model.Config_base):
-    config.update(conn, config_data.planta_ativa, config_data.tempo_verif, config_data.modificado)
+    config.update(conn, config_data.tempo_verif)
+    requests.post(URLEmbarcado, json = config_data)
     return config.select(conn)
-
