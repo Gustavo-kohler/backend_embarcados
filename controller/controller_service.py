@@ -7,7 +7,7 @@ URLEmbarcado = ""
 
 app = fastapi.FastAPI()
 
-engine = sa.create_engine('sqlite:///./database.db')
+engine = sa.create_engine('sqlite:///./controller.db')
 conn = engine.connect()
 metadata = sa.MetaData()
 
