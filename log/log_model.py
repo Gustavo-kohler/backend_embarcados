@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from typing import Union
 
 
-class LogModel:
+class Log:
     def __init__(self, metadata):
         self.log = sa.Table(
             'log',
@@ -16,11 +16,13 @@ class LogModel:
 
     def insert(self, conn, luz, umidade):
         conn.execute(self.log.insert().values(luz=luz, umidade=umidade))
+        conn.commit()
 
     def select_all(self, conn):
-        return conn.execute(self.log.select()).fetchall()
+        result = conn.execute(self.log.select()).fetchall()
+        return [dict(row._mapping) for row in result]
 
-class BaseLog(BaseModel):
+class Log_base(BaseModel):
     id: Union[int, None] = None
     umidade: Union[int, None] = None
     luz: Union[int, None] = None
